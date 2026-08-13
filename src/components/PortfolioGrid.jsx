@@ -101,7 +101,7 @@ const ARTWORKS = [
     title: 'Rose & Skull Realism',
     category: 'Portrait & Realism',
     time: '7 Hours Session',
-    image: '/images/sagar/sa1.png',
+    image: '/images/sagar/sa1.PNG',
     description: 'Vivid realism composition blending a detailed skull with deep red roses and ornamental filigree on the forearm.'
   },
   {
@@ -110,7 +110,7 @@ const ARTWORKS = [
     title: 'Dark Portrait Sleeve',
     category: 'Portrait & Realism',
     time: '6 Hours Session',
-    image: '/images/sagar/sa2.png',
+    image: '/images/sagar/sa2.PNG',
     description: 'Black-and-grey portrait piece with dramatic contrast and smooth gradient shading wrapping the forearm.'
   },
   {
@@ -119,7 +119,7 @@ const ARTWORKS = [
     title: 'Ornamental Blackwork Band',
     category: 'Fine Line & Mandala',
     time: '5 Hours Session',
-    image: '/images/sagar/sa3.png',
+    image: '/images/sagar/sa3.PNG',
     description: 'Dense ornamental blackwork cuff featuring interlocking patterns and subtle red highlights for depth.'
   },
   {
@@ -128,7 +128,7 @@ const ARTWORKS = [
     title: 'Mystic Portrait Realism',
     category: 'Portrait & Realism',
     time: '8 Hours Session',
-    image: '/images/sagar/sa4.png',
+    image: '/images/sagar/sa4.PNG',
     description: 'Hyper-realistic mystic face portrait with intense gaze, framed by dark ornamental background work.'
   },
   {

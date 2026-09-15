@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import OverlayMenu from './components/OverlayMenu';
 import AuthorityDock from './components/AuthorityDock';
@@ -11,8 +12,11 @@ import StudioSpace from './components/StudioSpace';
 import FloatingContactBar from './components/FloatingContactBar';
 import LocateModal from './components/LocateModal';
 import Footer from './components/Footer';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './pages/ProtectedRoute';
 
-export default function App() {
+function PublicSite() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLocateOpen, setIsLocateOpen] = useState(false);
 
@@ -59,5 +63,17 @@ export default function App() {
       {/* Omnipresent Floating Bottom Action Dock */}
       <FloatingContactBar />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<PublicSite />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute component={AdminDashboard} />} />
+      </Routes>
+    </Router>
   );
 }

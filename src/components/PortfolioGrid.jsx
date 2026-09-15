@@ -3,7 +3,7 @@ import { ArrowUpRight, X, MessageCircle } from 'lucide-react';
 
 const CATEGORIES = ['All', 'Sudee', 'Sagar'];
 
-const ARTWORKS = [
+const FALLBACK_ARTWORKS = [
   // ─── SUDEE ───
   {
     id: 1,
@@ -160,16 +160,43 @@ const ARTWORKS = [
   },
 ];
 
-// Parse artist filter from URL hash: #work?artist=Sudee
 const getArtistFromHash = () => {
-  const hash = window.location.hash; // e.g. "#work?artist=Sudee"
+  const hash = window.location.hash;
   const match = hash.match(/[?&]artist=([^&]+)/);
   return match ? decodeURIComponent(match[1]) : 'All';
 };
 
 export default function PortfolioGrid() {
+  const [artworks, setArtworks] = useState(FALLBACK_ARTWORKS);
   const [selectedCat, setSelectedCat] = useState(getArtistFromHash());
   const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await fetch('/api/items');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const apiItems = data.map((item) => ({
+              id: item.id,
+              artist: item.artist === 'sude' ? 'Sudee' : item.artist.charAt(0).toUpperCase() + item.artist.slice(1),
+              title: item.title,
+              category: 'Admin Upload',
+              time: '',
+              image: item.url,
+              description: item.bio || '',
+              type: item.type,
+            }));
+            setArtworks([...FALLBACK_ARTWORKS, ...apiItems]);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch portfolio items:', err);
+      }
+    };
+    fetchItems();
+  }, []);
 
   useEffect(() => {
     if (activeModal) {
@@ -180,7 +207,6 @@ export default function PortfolioGrid() {
     return () => { document.body.style.overflow = ''; };
   }, [activeModal]);
 
-  // Listen for hash changes from "See Work" clicks
   useEffect(() => {
     const handleHashChange = () => {
       const artist = getArtistFromHash();
@@ -189,14 +215,13 @@ export default function PortfolioGrid() {
       }
     };
     window.addEventListener('hashchange', handleHashChange);
-    // Also check on mount in case user landed with hash
     handleHashChange();
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const filtered = selectedCat === 'All'
-    ? ARTWORKS
-    : ARTWORKS.filter(item => item.artist === selectedCat);
+    ? artworks
+    : artworks.filter(item => item.artist === selectedCat);
 
   return (
     <section id="work" className="py-20 sm:py-32 border-b border-ink/10">

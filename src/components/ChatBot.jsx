@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader } from 'lucide-react';
+import { X, Send, Loader } from 'lucide-react';
 import { faqData, getCategoryEmoji } from '../data/faqData';
 
 export default function ChatBot() {
@@ -103,27 +103,30 @@ export default function ChatBot() {
     handleSendMessage(suggestion);
   };
 
-  const handleCategoryClick = (category) => {
-    const categoryFaqs = faqData.filter(faq => faq.category === category);
-    if (categoryFaqs.length > 0) {
-      handleSendMessage(`Show me FAQs about ${category}`);
-    }
-  };
-
   return (
     <>
       {/* Chat Bubble Button - Fixed Position */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed z-50 transition-all duration-300 ${
-          isMobile ? 'bottom-6 right-6' : 'bottom-8 right-8'
-        } ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        className={`fixed z-40 transition-all duration-300 ${
+          isMobile ? 'bottom-6 left-6' : 'bottom-8 left-8'
+        } ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100 pointer-events-auto'}`}
         aria-label="Open chat"
       >
-        <div className="relative">
-          <div className="absolute inset-0 bg-bloodRed rounded-full animate-pulse opacity-30"></div>
-          <div className={`w-${isMobile ? '14' : '16'} h-${isMobile ? '14' : '16'} bg-bloodRed hover:bg-bloodRed/90 rounded-full flex items-center justify-center text-bone shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer`}>
-            <MessageCircle className={`w-${isMobile ? '6' : '7'} h-${isMobile ? '6' : '7'}`} />
+        <div className="relative group">
+          {/* Pulsing background ring */}
+          <div className="absolute inset-0 bg-bloodRed/20 rounded-full animate-pulse"></div>
+
+          {/* Main button */}
+          <div className="relative w-14 h-14 bg-gradient-to-br from-bloodRed to-ink text-bone rounded-full flex items-center justify-center shadow-2xl hover:shadow-xl hover:scale-110 transition-all duration-300 cursor-pointer border border-bloodRed/30">
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+          </div>
+
+          {/* Hover label */}
+          <div className="absolute bottom-full right-0 mb-3 px-4 py-2 bg-ink text-bone text-xs font-semibold uppercase tracking-wider rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            Questions?
           </div>
         </div>
       </button>
@@ -131,21 +134,21 @@ export default function ChatBot() {
       {/* Chat Window */}
       {isOpen && (
         <div
-          className={`fixed z-50 bg-white rounded-lg shadow-2xl flex flex-col transition-all duration-300 ${
+          className={`fixed z-40 bg-bone border border-ink/10 rounded-lg shadow-2xl flex flex-col transition-all duration-300 ${
             isMobile
-              ? 'bottom-0 right-0 left-0 top-0 rounded-none md:bottom-8 md:right-8 md:left-auto md:top-auto md:w-96 md:h-[600px]'
-              : 'bottom-8 right-8 w-96 h-[600px]'
+              ? 'bottom-0 left-0 right-0 top-0 rounded-none'
+              : 'bottom-8 left-8 w-96 h-[600px]'
           }`}
         >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-ink to-bloodRed text-bone p-4 rounded-t-lg flex items-center justify-between">
+          {/* Header - Luxury gradient */}
+          <div className="bg-gradient-to-r from-ink via-ink to-bloodRed text-bone p-5 rounded-t-lg flex items-center justify-between border-b border-bloodRed/20">
             <div>
-              <h3 className="font-serif font-bold text-lg">Art Garage Chat</h3>
-              <p className="text-xs text-bone/80">We typically reply instantly</p>
+              <h3 className="font-serif font-bold text-lg tracking-tight">Art Garage</h3>
+              <p className="text-xs text-bone/75 font-sans uppercase tracking-widest mt-1">Chat Assistant</p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="hover:bg-bone/20 p-2 rounded transition-colors duration-200"
+              className="hover:bg-bloodRed/30 p-2 rounded-full transition-all duration-200"
               aria-label="Close chat"
             >
               <X className="w-5 h-5" />
@@ -155,7 +158,7 @@ export default function ChatBot() {
           {/* Messages Container */}
           <div
             ref={chatContainerRef}
-            className="flex-1 overflow-y-auto p-4 space-y-4 bg-bone/30"
+            className="flex-1 overflow-y-auto p-5 space-y-4 bg-bone"
           >
             {messages.map((message) => (
               <div
@@ -163,22 +166,22 @@ export default function ChatBot() {
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
               >
                 {message.type === 'bot' ? (
-                  <div className="flex gap-2 max-w-xs">
-                    <div className="w-8 h-8 bg-ink rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs text-bone font-bold">AG</span>
+                  <div className="flex gap-3 max-w-xs">
+                    <div className="w-8 h-8 bg-ink rounded-full flex items-center justify-center flex-shrink-0 border border-bloodRed/30">
+                      <span className="text-xs text-bone font-serif font-bold">A</span>
                     </div>
-                    <div className="bg-ink/10 border border-ink/20 rounded-lg p-3 rounded-tl-none">
+                    <div className="bg-white border border-ink/15 rounded-lg p-3.5 rounded-tl-none shadow-sm">
                       {message.emoji && <div className="text-2xl mb-2">{message.emoji}</div>}
-                      <p className="text-sm text-ink leading-relaxed">{message.text}</p>
+                      <p className="text-sm text-ink leading-relaxed font-sans">{message.text}</p>
                       <p className="text-xs text-warmGray mt-2">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-bloodRed text-bone rounded-lg p-3 max-w-xs rounded-br-none">
-                    <p className="text-sm">{message.text}</p>
-                    <p className="text-xs text-bone/80 mt-2">
+                  <div className="bg-ink text-bone rounded-lg p-3.5 max-w-xs rounded-br-none shadow-sm border border-ink/50">
+                    <p className="text-sm font-sans">{message.text}</p>
+                    <p className="text-xs text-bone/70 mt-2">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -189,12 +192,12 @@ export default function ChatBot() {
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex justify-start animate-fadeIn">
-                <div className="flex gap-2">
-                  <div className="w-8 h-8 bg-ink rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs text-bone font-bold">AG</span>
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 bg-ink rounded-full flex items-center justify-center flex-shrink-0 border border-bloodRed/30">
+                    <span className="text-xs text-bone font-serif font-bold">A</span>
                   </div>
-                  <div className="bg-ink/10 border border-ink/20 rounded-lg p-3 rounded-tl-none">
-                    <div className="flex gap-1">
+                  <div className="bg-white border border-ink/15 rounded-lg p-3.5 rounded-tl-none shadow-sm">
+                    <div className="flex gap-1.5">
                       <div className="w-2 h-2 bg-warmGray rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                       <div className="w-2 h-2 bg-warmGray rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                       <div className="w-2 h-2 bg-warmGray rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
@@ -206,14 +209,14 @@ export default function ChatBot() {
 
             {/* Suggestions */}
             {messages[messages.length - 1]?.suggestions && (
-              <div className="space-y-2 mt-4">
-                <p className="text-xs text-warmGray font-semibold uppercase tracking-wider">Quick replies:</p>
+              <div className="space-y-3 mt-4 pt-2 border-t border-ink/10">
+                <p className="text-xs text-warmGray font-semibold uppercase tracking-wider font-sans">Quick replies:</p>
                 <div className="flex flex-wrap gap-2">
                   {messages[messages.length - 1].suggestions.map((suggestion) => (
                     <button
                       key={suggestion}
                       onClick={() => handleSuggestion(suggestion)}
-                      className="px-3 py-2 bg-bloodRed/10 border border-bloodRed/30 text-bloodRed text-xs font-semibold rounded hover:bg-bloodRed/20 transition-colors duration-200"
+                      className="px-3 py-2 bg-bone border border-bloodRed/40 text-bloodRed text-xs font-semibold rounded hover:bg-bloodRed/5 transition-all duration-200 font-sans uppercase tracking-wider"
                     >
                       {suggestion}
                     </button>
@@ -226,7 +229,7 @@ export default function ChatBot() {
           </div>
 
           {/* Input Area */}
-          <div className="border-t border-ink/10 p-4 bg-white rounded-b-lg">
+          <div className="border-t border-ink/10 p-4 bg-bone rounded-b-lg">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -239,20 +242,20 @@ export default function ChatBot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask me anything..."
-                className="flex-1 px-3 py-2 border border-ink/20 rounded text-sm focus:outline-none focus:border-bloodRed transition-colors duration-200"
+                className="flex-1 px-4 py-2.5 border border-ink/20 rounded text-sm focus:outline-none focus:border-bloodRed focus:ring-1 focus:ring-bloodRed/30 transition-all duration-200 bg-white font-sans"
                 disabled={isTyping}
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isTyping}
-                className="bg-bloodRed hover:bg-bloodRed/90 disabled:opacity-50 text-bone p-2 rounded transition-colors duration-200"
+                className="bg-bloodRed hover:bg-bloodRed/90 disabled:opacity-50 disabled:cursor-not-allowed text-bone p-2.5 rounded transition-all duration-200 hover:shadow-lg"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
               </button>
             </form>
-            <p className="text-xs text-warmGray mt-2 text-center">
-              For complex questions, contact us directly at +91 7795875799
+            <p className="text-xs text-warmGray mt-3 text-center font-sans">
+              For complex questions, contact us at +91 7795875799
             </p>
           </div>
         </div>
@@ -261,7 +264,7 @@ export default function ChatBot() {
       {/* Backdrop for mobile fullscreen */}
       {isOpen && isMobile && (
         <div
-          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          className="fixed inset-0 bg-black/30 z-30"
           onClick={() => setIsOpen(false)}
         ></div>
       )}

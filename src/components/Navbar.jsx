@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Phone, MessageCircle, Menu } from 'lucide-react';
+import { MapPin, Phone, MessageCircle, Menu, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar({ onOpenMenu, onOpenLocate }) {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -49,6 +51,16 @@ export default function Navbar({ onOpenMenu, onOpenLocate }) {
           >
             <MapPin className="w-3.5 h-3.5 text-bloodRed" />
             <span>Locate Us</span>
+          </button>
+
+          {/* Admin Login Button */}
+          <button
+            onClick={() => navigate('/admin/login')}
+            className="hidden xs:flex items-center gap-1.5 px-3 sm:px-4 py-2 border border-ink/20 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase hover:border-bloodRed hover:bg-bloodRed/5 transition-all duration-300 text-warmGray hover:text-bloodRed"
+            title="Admin login for photo management"
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Admin</span>
           </button>
 
           {/* WhatsApp Direct Icon */}

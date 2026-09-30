@@ -12,6 +12,7 @@ import StudioSpace from './components/StudioSpace';
 import FloatingContactBar from './components/FloatingContactBar';
 import LocateModal from './components/LocateModal';
 import Footer from './components/Footer';
+import ChatBot from './components/ChatBot';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './pages/ProtectedRoute';
@@ -62,6 +63,9 @@ function PublicSite() {
 
       {/* Omnipresent Floating Bottom Action Dock */}
       <FloatingContactBar />
+
+      {/* AI ChatBot Widget */}
+      <ChatBot />
     </div>
   );
 }

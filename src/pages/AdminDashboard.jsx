@@ -46,17 +46,35 @@ export default function AdminDashboard() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFormData({
-          ...formData,
-          file: event.target.result,
-          fileName: file.name,
-        });
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate file size
+    const maxSize = formOpen === 'video' ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setError(`File too large. Maximum size is ${maxSize / 1024 / 1024}MB`);
+      return;
     }
+
+    // Validate file type
+    const validTypes = formOpen === 'video'
+      ? ['video/mp4', 'video/webm', 'video/quicktime']
+      : ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!validTypes.includes(file.type)) {
+      setError(`Invalid file type. Please upload ${formOpen === 'video' ? 'MP4, WebM, or MOV' : 'JPG, PNG, or WebP'}`);
+      return;
+    }
+
+    setError('');
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setFormData({
+        ...formData,
+        file: event.target.result,
+        fileName: file.name,
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
